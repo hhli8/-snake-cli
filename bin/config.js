@@ -1,7 +1,6 @@
 module.exports.templates = [
   {
     name: 'Uni App的模板项目',
-    value: 'direct:https://gitlab.mockuai.com/fe-infra/templates/uni-template-ts.git',
   },
   {
     name: 'test',
