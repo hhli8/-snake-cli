@@ -1,0 +1,50 @@
+#! /usr/bin/env node
+const { Command } = require('commander');
+// const execa = require("execa");
+const { execSync } = require('child_process');
+const path = require('path');
+const execAsync = require('../lib/execAsync');
+// const fs = require('fs');
+const copyFiles = require('../lib/up-micro/copyFiles');
+const writeFullVue = require('../lib/up-micro/writeFull.vue.js');
+const writeSidebar = require('../lib/up-micro/writeSidebar.vue.js');
+const writeMainJs = require('../lib/up-micro/writeMain.js.js');
+const writeRoutes = require('../lib/up-micro/writeRoutes');
+
+const theCommand = new Command('up-micro');
+
+theCommand.description('升级微前端').action(action);
+
+async function action() {
+  require('../lib/check-is-root');
+  await execAsync('npm i qiankun@^2 -S');
+  console.log('copy files...');
+  await copyFiles();
+  console.log('write Full.vue...');
+  await writeFullVue();
+  console.log('write main.js...');
+  await writeMainJs();
+  console.log('write router/page.js...');
+  // await writeRoutes();
+  // execSync('rm src/router/404*');
+  // console.log('write sidebar...');
+  // await writeSidebar();
+  execSync('echo src/micro-apps/local.js >> .gitignore');
+  console.log('done.');
+  await execAsync('git add .', undefined, { hideOut: true });
+  try {
+    await execAsync(
+      `npx lint-staged --config ${path.resolve(
+        __dirname,
+        '../lib/up-micro/fix-staged.config.js',
+      )}`,
+      undefined,
+      { hideOut: true },
+    );
+  } catch (error) {
+    await execAsync('git add .', undefined, { hideOut: true });
+  }
+  console.log('记得把路由删掉，记得修改props、修改src/mirco-apps');
+}
+
+theCommand.parse(process.argv);

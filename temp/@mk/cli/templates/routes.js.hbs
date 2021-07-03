@@ -1,0 +1,30 @@
+export default {
+  path: '{{moduleName}}',
+  name: '{{moduleName}}',
+  {{#if sort}}
+  sort: {{sort}},
+  {{/if}}
+  {{#if id}}
+  id: {{id}},
+  {{/if}}
+  {{#if hidden}}
+  hidden: {{hidden}},
+  {{/if}}
+  {{#with meta}}
+  meta: {
+    {{#if title}}
+    title: '{{title}}',
+    {{/if}}
+    {{#if index}}
+    index: '{{index}}',
+    {{/if}}
+    {{#if icon}}
+    icon: '{{icon}}',
+    {{/if}}
+    {{#if isAlone}}
+    isAlone: {{isAlone}},
+    {{/if}}
+  },
+  {{/with}}
+  component: () => import('@/views/{{moduleName}}/index.vue'),
+};

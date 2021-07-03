@@ -1,0 +1,85 @@
+#! /usr/bin/env node
+const { Command } = require('commander');
+const Handlebars = require('handlebars');
+// const execa = require("execa");
+// const { execSync } = require('child_process');
+// const execAsync = require('../lib/execAsync');
+// const config = require('../config');
+const path = require('path');
+const fs = require('fs-extra');
+const { promptRouteConfig, writeRoute } = require('../lib/gen/writeRoute');
+
+const CWD = process.cwd();
+
+const theCommand = new Command('generate');
+
+theCommand
+  .usage('<path>')
+  .option('<path>', 'module or page path, such as "order", "order/goods-order"')
+  .description('generator a new module/page')
+  .action(action);
+
+async function action() {
+  require('../lib/check-is-root');
+  const [pathArg] = theCommand.args;
+  if (!pathArg) {
+    throw new Error('path required');
+  }
+  await injectRouter(pathArg);
+}
+
+async function injectRouter(pathArg) {
+  const [moduleName, ...paths] = pathArg.split('/').filter(Boolean);
+  const routerFileDir = path.resolve(CWD, 'src/router/routes');
+  const routerFilePath = path.resolve(routerFileDir, `${moduleName}.routes.js`);
+  const viewDir = path.resolve(CWD, `src/views/${pathArg}`);
+  const viewFilePath = `${viewDir}/index.vue`;
+  const fileContent = `<template>
+  <dl>
+    <dd>${pathArg}</dd>
+    <dt>
+      <router-view />
+    </dt>
+  </dl>
+</template>`;
+
+  await fs.ensureFileSync(viewFilePath);
+  // await fs.ensureDir(routerFileDir);
+
+  // 写1级路由
+  if (paths.length === 0) {
+    if (!fs.existsSync(routerFilePath)) {
+      // 顺便写一下view文件
+      fs.writeFileSync(viewFilePath, fileContent);
+      const template = Handlebars.compile(
+        fs.readFileSync(path.resolve(__dirname, '../templates/routes.js.hbs'), 'utf-8'),
+      );
+      const { meta = {}, ...props } = await promptRouteConfig();
+      fs.writeFileSync(
+        routerFilePath,
+        template({
+          moduleName,
+          ...props,
+          meta: {
+            ...meta,
+            index: moduleName,
+          },
+        }),
+      );
+    } else {
+      throw new Error(`路由文件已存在${routerFilePath}`);
+    }
+    return;
+  }
+
+  // 写入2级+以上路由
+  if (!fs.existsSync(routerFilePath)) {
+    throw new Error(`路由文件不存在${routerFilePath}`);
+  }
+  // 顺便写一下view文件
+  fs.writeFileSync(viewFilePath, fileContent);
+
+  await writeRoute(routerFilePath, moduleName, paths);
+}
+
+theCommand.parse(process.argv);

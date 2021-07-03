@@ -1,0 +1,89 @@
+{
+  "_from": "@mk/cli",
+  "_id": "@mk/cli@2.12.9",
+  "_inBundle": false,
+  "_integrity": "sha512-ZOdnIMmNaY9vgKwWeLMNejpIUk4d42TGgvinTIwYwK0pWDkSt2s06q8exleEyKIf2WpOTQlzvtdowLkxp8aZtQ==",
+  "_location": "/@mk/cli",
+  "_phantomChildren": {
+    "ansi-escapes": "4.3.2",
+    "chalk": "4.1.1",
+    "cli-cursor": "3.1.0",
+    "cli-width": "3.0.0",
+    "external-editor": "3.1.0",
+    "figures": "3.2.0",
+    "lodash": "4.17.21",
+    "mute-stream": "0.0.8",
+    "run-async": "2.4.1",
+    "rxjs": "6.6.7",
+    "string-width": "4.2.2",
+    "strip-ansi": "6.0.0",
+    "through": "2.3.8"
+  },
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@mk/cli",
+    "name": "@mk/cli",
+    "escapedName": "@mk%2fcli",
+    "scope": "@mk",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "http://npm.mockuai.net/@mk%2fcli/-/cli-2.12.9.tgz",
+  "_shasum": "1ab49c56a684baaa9986e6b5d6176e122a2710b0",
+  "_spec": "@mk/cli",
+  "_where": "/Users/mockuai/mockuai-pc/cli",
+  "author": {
+    "name": "zhaobowen"
+  },
+  "bin": {
+    "mk": "bin/index"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/parser": "^7.10.2",
+    "@babel/traverse": "^7.10.1",
+    "@babel/types": "^7.10.3",
+    "@starptech/hast-util-from-webparser": "^0.10.0",
+    "@starptech/prettyhtml": "^0.10.0",
+    "@starptech/prettyhtml-hast-to-html": "^0.10.0",
+    "@starptech/webparser": "^0.10.0",
+    "chalk": "^4.0.0",
+    "commander": "^5.1.0",
+    "download-git-repo": "^3.0.2",
+    "ejs": "^3.1.3",
+    "execa": "^4.0.2",
+    "fs-extra": "^9.0.1",
+    "handlebars": "^4.7.6",
+    "inquirer": "^7.1.0",
+    "lodash": "^4.17.15",
+    "metalsmith": "^2.3.0",
+    "minimatch": "^3.0.4",
+    "semver": "^7.3.2",
+    "vue-sfc-descriptor-stringify": "^0.1.0",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "deprecated": false,
+  "description": "工程化问题工具包",
+  "devDependencies": {
+    "@mk/eslint-config": "^2.5.1",
+    "@mk/rules": "^3.4.0",
+    "eslint": "^7.5.0"
+  },
+  "keywords": [
+    "cli"
+  ],
+  "license": "ISC",
+  "name": "@mk/cli",
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.mockuai.com:zhaobowen/mk-cli.git"
+  },
+  "version": "2.12.9"
+}

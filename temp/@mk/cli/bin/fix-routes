@@ -1,0 +1,84 @@
+#! /usr/bin/env node
+const { Command } = require('commander');
+const inquirer = require('inquirer');
+// const execa = require("execa");
+// const child_process = require("child_process");
+const path = require('path');
+const fs = require('fs');
+const parser = require('@babel/parser');
+const babel = require('@babel/core');
+const traverse = require('@babel/traverse').default;
+const t = require('@babel/types');
+const execAsync = require('../lib/execAsync');
+const config = require('../config');
+const renderDir = require('../lib/renderDir');
+
+const theCommand = new Command('fix-routes');
+
+theCommand
+  .name('fix-routes')
+  .usage('<file>')
+  .description('修复路由动态import语法')
+  .action(action);
+
+async function action() {
+  const files = theCommand.args;
+  console.log(files);
+
+  files.forEach(executor);
+
+  console.log('✨ done');
+}
+
+function executor(file) {
+  const absolutePath = path.resolve(process.cwd(), file);
+  const entryContent = fs.readFileSync(absolutePath, 'utf-8');
+
+  const AST = parser.parse(entryContent, {
+    sourceType: 'module',
+    plugins: ['jsx'],
+  });
+  // console.log(AST.program.body[1].declaration.elements[0].properties[3]);
+  // visitor
+  traverse(AST, {
+    ObjectProperty: ppath => {
+      const {
+        node: { key, value },
+      } = ppath;
+      if (key.name === 'component' && value.type === 'ArrowFunctionExpression') {
+        const {
+          body: { callee, type, arguments: args },
+        } = value;
+        if (
+          type === 'CallExpression' &&
+          callee.type === 'MemberExpression' &&
+          callee.object.name === 'require' &&
+          callee.property.name === 'ensure'
+        ) {
+          const theFilePath = args[1].body.arguments[0].arguments[0].value;
+          console.log(theFilePath);
+          ppath.node.value = t.arrowFunctionExpression(
+            [],
+            t.callExpression(t.identifier('import'), [t.stringLiteral(theFilePath)]),
+          );
+        }
+      }
+    },
+  });
+
+  let { code } = babel.transformFromAstSync(AST, entryContent, {
+    generatorOpts: {
+      jsescOption: {
+        // escapeEverything: false,
+        quotes: 'single',
+      },
+    },
+    babelrc: false,
+    configFile: false,
+    presets: [],
+  });
+  // 中文反转义
+  code = code.replace(/\\u([\d\w]{4})/gi, (m, g) => String.fromCharCode(parseInt(g, 16)));
+  fs.writeFileSync(absolutePath, code);
+}
+theCommand.parse(process.argv);

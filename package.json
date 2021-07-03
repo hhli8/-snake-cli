@@ -1,0 +1,29 @@
+{
+  "name": "snake-cli",
+  "version": "1.0.0",
+  "description": "脚手架模板等",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "snake": "bin/snake.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hhli8/snake-cli.git"
+  },
+  "author": "lhh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hhli8/snake-cli/issues"
+  },
+  "homepage": "https://github.com/hhli8/snake-cli#readme",
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "commander": "^8.0.0",
+    "download-git-repo": "^3.0.2",
+    "inquirer": "^8.1.1",
+    "ora": "^5.4.1"
+  }
+}

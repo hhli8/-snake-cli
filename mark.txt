@@ -1,0 +1,14 @@
+参考文献：
+https://www.jianshu.com/p/e5b5d1fbcbdc
+https://blog.csdn.net/qq_40766509/article/details/104892285
+文件夹 temp/@mk/cli
+
+将命令挂载到全局
+sudo npm link => snake查看相关命令
+卸载
+npm unlink
+
+commander 配置中文文档
+https://github.com/tj/commander.js/blob/master/Readme_zh-CN.md
+
+inquirer 用户和命令行交互的工具
